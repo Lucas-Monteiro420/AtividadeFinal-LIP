@@ -185,7 +185,17 @@ def gerarGraficoBarrasDiario(lista):
     nomes = [a["nome"] for a in dados["aparelhos"]]
     consumos = [a["consumo"] for a in dados["aparelhos"]]
 
-    plt.figure(figsize=(12, 6))
+    # Reduzir o tamanho da figura para 8x5 polegadas (era 12x6)
+    plt.figure(figsize=(8, 5))
+    # Configurar a janela para centralizar na tela
+    manager = plt.get_current_fig_manager()
+    if hasattr(manager, 'window'):
+        try:
+            # Tenta centralizar a janela (funciona em várias plataformas)
+            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+        except:
+            pass  # Se não funcionar, ignora silenciosamente
+
     barras = plt.bar(nomes, consumos, color='skyblue')
 
     # Rotacionar os rótulos para melhor legibilidade
@@ -220,7 +230,17 @@ def gerarGraficoBarrasMensal(lista):
     nomes = [a["nome"] for a in dados["aparelhos"]]
     consumos = [a["consumo"] for a in dados["aparelhos"]]
 
-    plt.figure(figsize=(12, 6))
+    # Reduzir o tamanho da figura para 8x5 polegadas (era 12x6)
+    plt.figure(figsize=(8, 5))
+    # Configurar a janela para centralizar na tela
+    manager = plt.get_current_fig_manager()
+    if hasattr(manager, 'window'):
+        try:
+            # Tenta centralizar a janela (funciona em várias plataformas)
+            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+        except:
+            pass  # Se não funcionar, ignora silenciosamente
+
     barras = plt.bar(nomes, consumos, color='lightgreen')
 
     # Rotacionar os rótulos para melhor legibilidade
@@ -275,7 +295,16 @@ def gerarGraficoPizzaDiario(lista):
     consumos = [a["consumo"] for a in aparelhos_significativos]
     percentuais = [a["percentual"] for a in aparelhos_significativos]
 
-    plt.figure(figsize=(10, 8))
+    # Reduzir o tamanho da figura para 8x7 polegadas (era 10x8)
+    plt.figure(figsize=(8, 7))
+    # Configurar a janela para centralizar na tela
+    manager = plt.get_current_fig_manager()
+    if hasattr(manager, 'window'):
+        try:
+            # Tenta centralizar a janela (funciona em várias plataformas)
+            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+        except:
+            pass  # Se não funcionar, ignora silenciosamente
 
     # Gerar cores automaticamente baseadas no tamanho da lista
     cores = plt.cm.tab20(np.linspace(0, 1, len(nomes)))
@@ -329,7 +358,16 @@ def gerarGraficoPizzaMensal(lista):
     consumos = [a["consumo"] for a in aparelhos_significativos]
     percentuais = [a["percentual"] for a in aparelhos_significativos]
 
-    plt.figure(figsize=(10, 8))
+    # Reduzir o tamanho da figura para 8x7 polegadas (era 10x8)
+    plt.figure(figsize=(8, 7))
+    # Configurar a janela para centralizar na tela
+    manager = plt.get_current_fig_manager()
+    if hasattr(manager, 'window'):
+        try:
+            # Tenta centralizar a janela (funciona em várias plataformas)
+            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+        except:
+            pass  # Se não funcionar, ignora silenciosamente
 
     # Gerar cores automaticamente baseadas no tamanho da lista
     cores = plt.cm.tab20(np.linspace(0, 1, len(nomes)))
