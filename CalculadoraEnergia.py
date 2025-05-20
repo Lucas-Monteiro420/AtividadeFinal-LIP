@@ -5,7 +5,7 @@ Calculadora de Consumo Energético Residencial
 Módulo principal que implementa a interface de usuário e fluxo lógico do programa.
 Este módulo utiliza as funções definidas no módulo 'funcoes_energia.py'.
 
-Autores: [Seus nomes aqui]
+Autores: [Lucas Monteiro, Ana Azuma, Willian Wallace, Mateus Rodrigues]
 Data: 19/05/2025
 """
 
