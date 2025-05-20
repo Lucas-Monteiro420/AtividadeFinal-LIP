@@ -274,9 +274,20 @@ def gerar_salvar_grafico(plt_objeto, nome_arquivo):
         plt_objeto.savefig(caminho_arquivo, dpi=300, bbox_inches='tight')
         print(f"✅ Gráfico salvo em: {caminho_arquivo}")
 
-        # Mostrar gráfico de forma não bloqueante
-        plt_objeto.show(block=False)
-        plt.pause(0.5)  # Pequena pausa para garantir que o gráfico apareça
+        # Ajustar a janela para ficar centralizada na tela (além das configurações na criação)
+        manager = plt.get_current_fig_manager()
+        if hasattr(manager, 'window'):
+            try:
+                # Configura a janela para ficar centralizada e com tamanho reduzido
+                # A sintaxe exata varia dependendo do backend do matplotlib
+                if hasattr(manager, 'resize'):
+                    manager.resize(800, 600)  # Largura, altura em pixels
+                if hasattr(manager.window, 'wm_geometry'):
+                    # Posição x,y da janela na tela (centralizada)
+                    manager.window.wm_geometry("+300+200")
+            except Exception as e:
+                # Ignora silenciosamente erros de ajuste de janela
+                pass
 
     except Exception as e:
         print(f"❌ Erro ao gerar ou salvar o gráfico: {e}")
@@ -294,61 +305,59 @@ def menu_graficos(lista_aparelhos):
         if opcao == "1":
             plt_grafico = gerarGraficoBarrasDiario(lista_aparelhos)
             gerar_salvar_grafico(plt_grafico, "grafico_barras_diario.png")
+            print("\nFeche a janela do gráfico para continuar...")
+            plt.show()  # Bloqueia até o usuário fechar o gráfico
 
         elif opcao == "2":
             plt_grafico = gerarGraficoBarrasMensal(lista_aparelhos)
             gerar_salvar_grafico(plt_grafico, "grafico_barras_mensal.png")
+            print("\nFeche a janela do gráfico para continuar...")
+            plt.show()  # Bloqueia até o usuário fechar o gráfico
 
         elif opcao == "3":
             plt_grafico = gerarGraficoPizzaDiario(lista_aparelhos)
             gerar_salvar_grafico(plt_grafico, "grafico_pizza_diario.png")
+            print("\nFeche a janela do gráfico para continuar...")
+            plt.show()  # Bloqueia até o usuário fechar o gráfico
 
         elif opcao == "4":
             plt_grafico = gerarGraficoPizzaMensal(lista_aparelhos)
             gerar_salvar_grafico(plt_grafico, "grafico_pizza_mensal.png")
-
+            print("\nFeche a janela do gráfico para continuar...")
+            plt.show()  # Bloqueia até o usuário fechar o gráfico
 
         elif opcao == "5":
-
             print("\nGerando todos os gráficos...")
-
             try:
-
-                # Gerar gráficos um por um para evitar conflitos
-
+                # Gerar gráficos um por um, esperando o usuário fechar cada um
                 plt_grafico = gerarGraficoBarrasDiario(lista_aparelhos)
-
                 gerar_salvar_grafico(plt_grafico, "grafico_barras_diario.png")
-
-                time.sleep(15)
-                plt.close()  # Fecha o gráfico atual antes de criar o próximo
+                print("\nFeche a janela do gráfico para ver o próximo...")
+                plt.show()  # Bloqueia até o usuário fechar o gráfico
 
                 plt_grafico = gerarGraficoBarrasMensal(lista_aparelhos)
-
                 gerar_salvar_grafico(plt_grafico, "grafico_barras_mensal.png")
-                time.sleep(15)
-                plt.close()
+                print("\nFeche a janela do gráfico para ver o próximo...")
+                plt.show()  # Bloqueia até o usuário fechar o gráfico
 
                 plt_grafico = gerarGraficoPizzaDiario(lista_aparelhos)
-
                 gerar_salvar_grafico(plt_grafico, "grafico_pizza_diario.png")
-                time.sleep(15)
-                plt.close()
+                print("\nFeche a janela do gráfico para ver o próximo...")
+                plt.show()  # Bloqueia até o usuário fechar o gráfico
 
                 plt_grafico = gerarGraficoPizzaMensal(lista_aparelhos)
-
                 gerar_salvar_grafico(plt_grafico, "grafico_pizza_mensal.png")
-                time.sleep(15)
-                plt.close()
+                print("\nFeche a janela do gráfico para continuar...")
+                plt.show()  # Bloqueia até o usuário fechar o gráfico
 
                 print("\n✅ Todos os gráficos foram gerados na pasta 'graficos'!")
-
             except Exception as e:
-
                 print(f"\n❌ Erro ao gerar gráficos: {e}")
 
-        input("\nPressione ENTER para continuar...")
+        elif opcao == "0":
+            return
 
+        input("\nPressione ENTER para continuar...")
 
 def mostrar_dicas_economia(lista_aparelhos):
     """Exibe dicas personalizadas para economia de energia"""
@@ -492,7 +501,7 @@ def exibir_sobre():
 
     print("Calculadora de Consumo Energético Residencial")
     print("Versão: 1.0.0")
-    print("Desenvolvido por: [Seus nomes aqui]")
+    print("Desenvolvido por: Lucas Monteiro, Ana Azuma, Willian Wallace, Mateus Rodrigues")
     print("Data: 19/05/2025")
     print("\nEsta ferramenta permite calcular e visualizar o consumo de energia")
     print("elétrica em residências, auxiliando na economia e uso consciente.")
