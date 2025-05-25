@@ -170,117 +170,169 @@ def calcularCustoMensal(consumo_mensal, tarifa):
     return resultado
 
 
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Shadow
+import seaborn as sns
+
+# Configurar estilo global
+plt.style.use('seaborn-v0_8-darkgrid')
+sns.set_palette("husl")
+
+
 def gerarGraficoBarrasDiario(lista):
     """
-    Gera um gráfico de barras com o consumo diário de cada aparelho
-
-    Args:
-        lista: Lista de aparelhos
+    Gera um gráfico de barras elegante com o consumo diário de cada aparelho
     """
     dados = calcularConsumoDiario(lista)
-
-    # Ordenar por consumo para melhor visualização
     dados["aparelhos"].sort(key=lambda x: x["consumo"], reverse=True)
 
     nomes = [a["nome"] for a in dados["aparelhos"]]
     consumos = [a["consumo"] for a in dados["aparelhos"]]
 
-    # Reduzir o tamanho da figura para 8x5 polegadas (era 12x6)
-    plt.figure(figsize=(8, 5))
-    # Configurar a janela para centralizar na tela
+    # Criar figura com melhor resolução
+    fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
+
+    # Configurar posição da janela
     manager = plt.get_current_fig_manager()
     if hasattr(manager, 'window'):
         try:
-            # Tenta centralizar a janela (funciona em várias plataformas)
-            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+            manager.window.wm_geometry("+200+100")
         except:
-            pass  # Se não funcionar, ignora silenciosamente
+            pass
 
-    barras = plt.bar(nomes, consumos, color='skyblue')
+    # Criar gradiente de cores
+    colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(nomes)))
 
-    # Rotacionar os rótulos para melhor legibilidade
-    plt.xticks(rotation=45, ha='right')
+    # Criar barras com sombra
+    barras = ax.bar(nomes, consumos, color=colors, alpha=0.8,
+                    edgecolor='white', linewidth=1.5)
 
-    # Adicionar rótulos com o valor do consumo em cada barra
+    # Adicionar sombra às barras
     for barra in barras:
-        altura = barra.get_height()
-        plt.text(barra.get_x() + barra.get_width() / 2., altura + 0.05,
-                 f'{altura:.2f}', ha='center', va='bottom')
+        shadow = Shadow(barra, 0.02, 0.02)
+        ax.add_patch(shadow)
 
-    plt.title('Consumo Diário de Energia por Aparelho (kWh)')
-    plt.xlabel('Aparelhos')
-    plt.ylabel('Consumo (kWh)')
+    # Rotacionar rótulos com melhor formatação
+    plt.xticks(rotation=45, ha='right', fontsize=11, fontweight='bold')
+    plt.yticks(fontsize=11)
+
+    # Adicionar valores nas barras com melhor formatação
+    for i, barra in enumerate(barras):
+        altura = barra.get_height()
+        ax.text(barra.get_x() + barra.get_width() / 2., altura + max(consumos) * 0.01,
+                f'{altura:.2f} kWh', ha='center', va='bottom',
+                fontweight='bold', fontsize=10,
+                bbox=dict(boxstyle="round,pad=0.3", facecolor='white', alpha=0.8))
+
+    # Melhorar títulos e labels
+    ax.set_title('Consumo Diário de Energia por Aparelho',
+                 fontsize=16, fontweight='bold', pad=20)
+    ax.set_xlabel('Aparelhos', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Consumo (kWh)', fontsize=12, fontweight='bold')
+
+    # Adicionar grid personalizado
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.set_axisbelow(True)
+
+    # Melhorar layout
     plt.tight_layout()
+
+    # Adicionar total no canto
+    total = sum(consumos)
+    ax.text(0.85, 0.98, f'Total: {total:.2f} kWh/dia',
+            transform=ax.transAxes, fontsize=11, fontweight='bold',
+            bbox=dict(boxstyle="round,pad=0.5", facecolor='lightblue', alpha=0.8),
+            verticalalignment='top')
 
     return plt
 
 
 def gerarGraficoBarrasMensal(lista):
     """
-    Gera um gráfico de barras com o consumo mensal de cada aparelho
-
-    Args:
-        lista: Lista de aparelhos
+    Gera um gráfico de barras elegante com o consumo mensal de cada aparelho
     """
     dados = calcularConsumoMensal(lista)
-
-    # Ordenar por consumo para melhor visualização
     dados["aparelhos"].sort(key=lambda x: x["consumo"], reverse=True)
 
     nomes = [a["nome"] for a in dados["aparelhos"]]
     consumos = [a["consumo"] for a in dados["aparelhos"]]
 
-    # Reduzir o tamanho da figura para 8x5 polegadas (era 12x6)
-    plt.figure(figsize=(8, 5))
-    # Configurar a janela para centralizar na tela
+    # Criar figura com melhor resolução
+    fig, ax = plt.subplots(figsize=(12, 8), dpi=100)
+
+    # Configurar posição da janela
     manager = plt.get_current_fig_manager()
     if hasattr(manager, 'window'):
         try:
-            # Tenta centralizar a janela (funciona em várias plataformas)
-            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+            manager.window.wm_geometry("+200+100")
         except:
-            pass  # Se não funcionar, ignora silenciosamente
+            pass
 
-    barras = plt.bar(nomes, consumos, color='lightgreen')
+    # Criar gradiente de cores
+    colors = plt.cm.plasma(np.linspace(0.2, 0.8, len(nomes)))
 
-    # Rotacionar os rótulos para melhor legibilidade
-    plt.xticks(rotation=45, ha='right')
+    # Criar barras com sombra
+    barras = ax.bar(nomes, consumos, color=colors, alpha=0.8,
+                    edgecolor='white', linewidth=1.5)
 
-    # Adicionar rótulos com o valor do consumo em cada barra
+    # Adicionar sombra às barras
     for barra in barras:
-        altura = barra.get_height()
-        plt.text(barra.get_x() + barra.get_width() / 2., altura + 0.05,
-                 f'{altura:.1f}', ha='center', va='bottom')
+        shadow = Shadow(barra, 0.02, 0.02)
+        ax.add_patch(shadow)
 
-    plt.title('Consumo Mensal de Energia por Aparelho (kWh)')
-    plt.xlabel('Aparelhos')
-    plt.ylabel('Consumo (kWh)')
+    # Rotacionar rótulos com melhor formatação
+    plt.xticks(rotation=45, ha='right', fontsize=11, fontweight='bold')
+    plt.yticks(fontsize=11)
+
+    # Adicionar valores nas barras
+    for i, barra in enumerate(barras):
+        altura = barra.get_height()
+        ax.text(barra.get_x() + barra.get_width() / 2., altura + max(consumos) * 0.01,
+                f'{altura:.1f} kWh', ha='center', va='bottom',
+                fontweight='bold', fontsize=10,
+                bbox=dict(boxstyle="round,pad=0.3", facecolor='white', alpha=0.8))
+
+    # Melhorar títulos e labels
+    ax.set_title('Consumo Mensal de Energia por Aparelho',
+                 fontsize=16, fontweight='bold', pad=20)
+    ax.set_xlabel('Aparelhos', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Consumo (kWh)', fontsize=12, fontweight='bold')
+
+    # Adicionar grid personalizado
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.set_axisbelow(True)
+
+    # Melhorar layout
     plt.tight_layout()
+
+    # Adicionar total no canto
+    total = sum(consumos)
+    ax.text(0.85, 0.98, f'Total: {total:.1f} kWh/mês',
+            transform=ax.transAxes, fontsize=11, fontweight='bold',
+            bbox=dict(boxstyle="round,pad=0.5", facecolor='lightgreen', alpha=0.8),
+            verticalalignment='top')
 
     return plt
 
 
 def gerarGraficoPizzaDiario(lista):
     """
-    Gera um gráfico de pizza com o consumo diário percentual de cada aparelho
-
-    Args:
-        lista: Lista de aparelhos
+    Gera um gráfico de pizza elegante e organizado com o consumo diário
     """
     dados = calcularConsumoDiario(lista)
 
-    # Filtrar apenas aparelhos com consumo significativo (mais de 1% do total)
-    # para não sobrecarregar o gráfico de pizza
+    # Filtrar aparelhos significativos (mais de 2% do total para melhor visualização)
     aparelhos_significativos = []
     outros_consumo = 0
 
     for aparelho in dados["aparelhos"]:
-        if aparelho["percentual"] > 1:
+        if aparelho["percentual"] > 2:
             aparelhos_significativos.append(aparelho)
         else:
             outros_consumo += aparelho["consumo"]
 
-    # Adicionar a categoria "Outros" se necessário
+    # Adicionar categoria "Outros" se necessário
     if outros_consumo > 0:
         aparelhos_significativos.append({
             "nome": "Outros",
@@ -288,62 +340,94 @@ def gerarGraficoPizzaDiario(lista):
             "percentual": (outros_consumo / dados["total"]) * 100
         })
 
-    # Ordenar por consumo para consistência
     aparelhos_significativos.sort(key=lambda x: x["consumo"], reverse=True)
 
     nomes = [a["nome"] for a in aparelhos_significativos]
     consumos = [a["consumo"] for a in aparelhos_significativos]
     percentuais = [a["percentual"] for a in aparelhos_significativos]
 
-    # Reduzir o tamanho da figura para 8x7 polegadas (era 10x8)
-    plt.figure(figsize=(8, 7))
-    # Configurar a janela para centralizar na tela
+    # Criar figura maior e mais elegante
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8), dpi=100)
+
+    # Configurar posição da janela
     manager = plt.get_current_fig_manager()
     if hasattr(manager, 'window'):
         try:
-            # Tenta centralizar a janela (funciona em várias plataformas)
-            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+            manager.window.wm_geometry("+100+50")
         except:
-            pass  # Se não funcionar, ignora silenciosamente
+            pass
 
-    # Gerar cores automaticamente baseadas no tamanho da lista
-    cores = plt.cm.tab20(np.linspace(0, 1, len(nomes)))
+    # Cores mais elegantes
+    colors = plt.cm.Set3(np.linspace(0, 1, len(nomes)))
 
-    # Destacar a fatia maior
-    explode = [0.1 if i == 0 else 0 for i in range(len(nomes))]
+    # Explode para destacar as fatias maiores
+    explode = [0.1 if p > 20 else 0.05 if p > 10 else 0 for p in percentuais]
 
-    # Plotar gráfico de pizza
-    plt.pie(consumos, labels=nomes, autopct='%1.1f%%', shadow=True,
-            startangle=90, explode=explode, colors=cores)
+    # GRÁFICO DE PIZZA PRINCIPAL
+    wedges, texts, autotexts = ax1.pie(consumos, labels=None, autopct='%1.1f%%',
+                                       shadow=True, startangle=90, explode=explode,
+                                       colors=colors, textprops={'fontsize': 10, 'fontweight': 'bold'})
 
-    plt.axis('equal')  # Mantém o gráfico circular
-    plt.title('Distribuição Percentual do Consumo Diário de Energia')
+    # Melhorar aparência das porcentagens
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(11)
+
+    ax1.set_title('Distribuição do Consumo Diário\n',
+                  fontsize=14, fontweight='bold', pad=20)
+
+    # LEGENDA ELEGANTE NO SEGUNDO SUBPLOT
+    ax2.axis('off')
+
+    # Criar legenda com informações detalhadas
+    legend_data = []
+    for i, (nome, consumo, perc) in enumerate(zip(nomes, consumos, percentuais)):
+        legend_data.append(f"{nome}: {consumo:.2f} kWh ({perc:.1f}%)")
+
+    # Adicionar legenda organizada
+    ax2.text(0.1, 0.9, 'Detalhamento por Aparelho:',
+             fontsize=14, fontweight='bold', transform=ax2.transAxes)
+
+    for i, item in enumerate(legend_data):
+        ax2.text(0.1, 0.8 - i * 0.08, f"• {item}",
+                 fontsize=12, transform=ax2.transAxes,
+                 bbox=dict(boxstyle="round,pad=0.3",
+                           facecolor=colors[i], alpha=0.3))
+
+    # Adicionar total
+    total = sum(consumos)
+    ax2.text(0.1, 0.15, f'Total Diário: {total:.2f} kWh',
+             fontsize=13, fontweight='bold', transform=ax2.transAxes,
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='gold', alpha=0.7))
+
+    # Adicionar estimativa mensal
+    estimativa_mensal = total * 30
+    ax2.text(0.1, 0.05, f'Estimativa Mensal: {estimativa_mensal:.1f} kWh',
+             fontsize=11, transform=ax2.transAxes,
+             bbox=dict(boxstyle="round,pad=0.3", facecolor='lightblue', alpha=0.7))
+
     plt.tight_layout()
-
     return plt
 
 
 def gerarGraficoPizzaMensal(lista):
     """
-    Gera um gráfico de pizza com o consumo mensal percentual de cada aparelho
-
-    Args:
-        lista: Lista de aparelhos
+    Gera um gráfico de pizza elegante e organizado com o consumo mensal
     """
     dados = calcularConsumoMensal(lista)
 
-    # Filtrar apenas aparelhos com consumo significativo (mais de 1% do total)
-    # para não sobrecarregar o gráfico de pizza
+    # Filtrar aparelhos significativos
     aparelhos_significativos = []
     outros_consumo = 0
 
     for aparelho in dados["aparelhos"]:
-        if aparelho["percentual"] > 1:
+        if aparelho["percentual"] > 2:
             aparelhos_significativos.append(aparelho)
         else:
             outros_consumo += aparelho["consumo"]
 
-    # Adicionar a categoria "Outros" se necessário
+    # Adicionar categoria "Outros" se necessário
     if outros_consumo > 0:
         aparelhos_significativos.append({
             "nome": "Outros",
@@ -351,38 +435,74 @@ def gerarGraficoPizzaMensal(lista):
             "percentual": (outros_consumo / dados["total"]) * 100
         })
 
-    # Ordenar por consumo para consistência
     aparelhos_significativos.sort(key=lambda x: x["consumo"], reverse=True)
 
     nomes = [a["nome"] for a in aparelhos_significativos]
     consumos = [a["consumo"] for a in aparelhos_significativos]
     percentuais = [a["percentual"] for a in aparelhos_significativos]
 
-    # Reduzir o tamanho da figura para 8x7 polegadas (era 10x8)
-    plt.figure(figsize=(8, 7))
-    # Configurar a janela para centralizar na tela
+    # Criar figura maior e mais elegante
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8), dpi=100)
+
+    # Configurar posição da janela
     manager = plt.get_current_fig_manager()
     if hasattr(manager, 'window'):
         try:
-            # Tenta centralizar a janela (funciona em várias plataformas)
-            manager.window.wm_geometry("+300+200")  # posição x, y da janela
+            manager.window.wm_geometry("+100+50")
         except:
-            pass  # Se não funcionar, ignora silenciosamente
+            pass
 
-    # Gerar cores automaticamente baseadas no tamanho da lista
-    cores = plt.cm.tab20(np.linspace(0, 1, len(nomes)))
+    # Cores mais elegantes
+    colors = plt.cm.tab20(np.linspace(0, 1, len(nomes)))
 
-    # Destacar a fatia maior
-    explode = [0.1 if i == 0 else 0 for i in range(len(nomes))]
+    # Explode para destacar as fatias maiores
+    explode = [0.1 if p > 20 else 0.05 if p > 10 else 0 for p in percentuais]
 
-    # Plotar gráfico de pizza
-    plt.pie(consumos, labels=nomes, autopct='%1.1f%%', shadow=True,
-            startangle=90, explode=explode, colors=cores)
+    # GRÁFICO DE PIZZA PRINCIPAL
+    wedges, texts, autotexts = ax1.pie(consumos, labels=None, autopct='%1.1f%%',
+                                       shadow=True, startangle=90, explode=explode,
+                                       colors=colors, textprops={'fontsize': 10, 'fontweight': 'bold'})
 
-    plt.axis('equal')  # Mantém o gráfico circular
-    plt.title('Distribuição Percentual do Consumo Mensal de Energia')
+    # Melhorar aparência das porcentagens
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(11)
+
+    ax1.set_title('Distribuição do Consumo Mensal\n',
+                  fontsize=14, fontweight='bold', pad=20)
+
+    # LEGENDA ELEGANTE NO SEGUNDO SUBPLOT
+    ax2.axis('off')
+
+    # Criar legenda com informações detalhadas
+    legend_data = []
+    for i, (nome, consumo, perc) in enumerate(zip(nomes, consumos, percentuais)):
+        legend_data.append(f"{nome}: {consumo:.1f} kWh ({perc:.1f}%)")
+
+    # Adicionar legenda organizada
+    ax2.text(0.1, 0.9, 'Detalhamento por Aparelho:',
+             fontsize=14, fontweight='bold', transform=ax2.transAxes)
+
+    for i, item in enumerate(legend_data):
+        ax2.text(0.1, 0.8 - i * 0.08, f"• {item}",
+                 fontsize=12, transform=ax2.transAxes,
+                 bbox=dict(boxstyle="round,pad=0.3",
+                           facecolor=colors[i], alpha=0.3))
+
+    # Adicionar total
+    total = sum(consumos)
+    ax2.text(0.1, 0.15, f'Total Mensal: {total:.1f} kWh',
+             fontsize=13, fontweight='bold', transform=ax2.transAxes,
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='gold', alpha=0.7))
+
+    # Adicionar estimativa de custo (considerando R$ 0,65/kWh como exemplo)
+    custo_estimado = total * 0.65
+    ax2.text(0.1, 0.05, f'Custo Estimado: R$ {custo_estimado:.2f}',
+             fontsize=11, transform=ax2.transAxes,
+             bbox=dict(boxstyle="round,pad=0.3", facecolor='lightcoral', alpha=0.7))
+
     plt.tight_layout()
-
     return plt
 
 
