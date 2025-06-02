@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Calculadora de Consumo Energético Residencial
 Módulo principal que implementa a interface de usuário e fluxo lógico do programa.
-Este módulo utiliza as funções definidas no módulo 'funcoes_energia.py'.
+Este módulo utiliza as funções definidas no módulo 'Defs.py'.
 
 Autores: [Lucas Monteiro, Ana Azuma, Willian Wallace, Mateus Rodrigues]
 Data: 19/05/2025
