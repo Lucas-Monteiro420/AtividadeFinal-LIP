@@ -316,9 +316,13 @@ def gerarGraficoBarrasMensal(lista):
     return plt
 
 
-def gerarGraficoPizzaDiario(lista):
+def gerarGraficoPizzaDiario(lista, tarifa=0.65):
     """
-    Gera um gráfico de pizza elegante e organizado com o consumo diário
+    Gera um gráfico de pizza elegante e organizado com o consumo diário e gasto em reais
+
+    Args:
+        lista: Lista de aparelhos
+        tarifa: Tarifa de energia em R$/kWh (padrão: R$ 0,65)
     """
     dados = calcularConsumoDiario(lista)
 
@@ -345,6 +349,7 @@ def gerarGraficoPizzaDiario(lista):
     nomes = [a["nome"] for a in aparelhos_significativos]
     consumos = [a["consumo"] for a in aparelhos_significativos]
     percentuais = [a["percentual"] for a in aparelhos_significativos]
+    custos = [consumo * tarifa for consumo in consumos]  # Calcular custos em reais
 
     # Criar figura maior e mais elegante
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8), dpi=100)
@@ -360,12 +365,9 @@ def gerarGraficoPizzaDiario(lista):
     # Cores mais elegantes
     colors = plt.cm.Set3(np.linspace(0, 1, len(nomes)))
 
-    # Explode para destacar as fatias maiores
-    explode = [0.1 if p > 20 else 0.05 if p > 10 else 0 for p in percentuais]
-
     # GRÁFICO DE PIZZA PRINCIPAL
     wedges, texts, autotexts = ax1.pie(consumos, labels=None, autopct='%1.1f%%',
-                                       shadow=True, startangle=90, explode=explode,
+                                       shadow=True, startangle=90,
                                        colors=colors, textprops={'fontsize': 10, 'fontweight': 'bold'})
 
     # Melhorar aparência das porcentagens
@@ -380,10 +382,10 @@ def gerarGraficoPizzaDiario(lista):
     # LEGENDA ELEGANTE NO SEGUNDO SUBPLOT
     ax2.axis('off')
 
-    # Criar legenda com informações detalhadas
+    # Criar legenda com informações detalhadas incluindo gasto em reais
     legend_data = []
-    for i, (nome, consumo, perc) in enumerate(zip(nomes, consumos, percentuais)):
-        legend_data.append(f"{nome}: {consumo:.2f} kWh ({perc:.1f}%)")
+    for i, (nome, consumo, perc, custo) in enumerate(zip(nomes, consumos, percentuais, custos)):
+        legend_data.append(f"{nome}: {consumo:.2f} kWh ({perc:.1f}%) - R$ {custo:.2f}")
 
     # Adicionar legenda organizada
     ax2.text(0.1, 0.9, 'Detalhamento por Aparelho:',
@@ -391,22 +393,20 @@ def gerarGraficoPizzaDiario(lista):
 
     for i, item in enumerate(legend_data):
         ax2.text(0.1, 0.8 - i * 0.08, f"• {item}",
-                 fontsize=12, transform=ax2.transAxes,
+                 fontsize=11, transform=ax2.transAxes,
                  bbox=dict(boxstyle="round,pad=0.3",
                            facecolor=colors[i], alpha=0.3))
 
-    # Adicionar total
-    total = sum(consumos)
-    ax2.text(0.1, 0.15, f'Total Diário: {total:.2f} kWh',
+    # Adicionar total com consumo e gasto
+    total_consumo = sum(consumos)
+    total_custo = sum(custos)
+    ax2.text(0.1, 0.15, f'Total Diário: {total_consumo:.2f} kWh',
              fontsize=13, fontweight='bold', transform=ax2.transAxes,
              bbox=dict(boxstyle="round,pad=0.5", facecolor='gold', alpha=0.7))
 
-    # Adicionar estimativa mensal
-    estimativa_mensal = total * 30
-    ax2.text(0.1, 0.05, f'Estimativa Mensal: {estimativa_mensal:.1f} kWh',
-             fontsize=11, transform=ax2.transAxes,
-             bbox=dict(boxstyle="round,pad=0.3", facecolor='lightblue', alpha=0.7))
-
+    ax2.text(0.1, 0.05, f'Gasto Diário: R$ {total_custo:.2f}',
+             fontsize=13, fontweight='bold', transform=ax2.transAxes,
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='lightcoral', alpha=0.7))
     plt.tight_layout()
     return plt
 
@@ -456,11 +456,10 @@ def gerarGraficoPizzaMensal(lista):
     colors = plt.cm.tab20(np.linspace(0, 1, len(nomes)))
 
     # Explode para destacar as fatias maiores
-    explode = [0.1 if p > 20 else 0.05 if p > 10 else 0 for p in percentuais]
 
     # GRÁFICO DE PIZZA PRINCIPAL
     wedges, texts, autotexts = ax1.pie(consumos, labels=None, autopct='%1.1f%%',
-                                       shadow=True, startangle=90, explode=explode,
+                                       shadow=True, startangle=90,
                                        colors=colors, textprops={'fontsize': 10, 'fontweight': 'bold'})
 
     # Melhorar aparência das porcentagens
@@ -499,8 +498,8 @@ def gerarGraficoPizzaMensal(lista):
     # Adicionar estimativa de custo (considerando R$ 0,65/kWh como exemplo)
     custo_estimado = total * 0.65
     ax2.text(0.1, 0.05, f'Custo Estimado: R$ {custo_estimado:.2f}',
-             fontsize=11, transform=ax2.transAxes,
-             bbox=dict(boxstyle="round,pad=0.3", facecolor='lightcoral', alpha=0.7))
+             fontsize=13, fontweight='bold', transform=ax2.transAxes,
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='lightcoral', alpha=0.7))
 
     plt.tight_layout()
     return plt
