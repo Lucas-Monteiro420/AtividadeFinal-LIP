@@ -392,7 +392,7 @@ def gerarGraficoPizzaDiario(lista, tarifa=0.65):
              fontsize=14, fontweight='bold', transform=ax2.transAxes)
 
     for i, item in enumerate(legend_data):
-        ax2.text(0.1, 0.8 - i * 0.08, f"• {item}",
+        ax2.text(0.05, 0.8 - i * 0.08, f"• {item}",
                  fontsize=11, transform=ax2.transAxes,
                  bbox=dict(boxstyle="round,pad=0.3",
                            facecolor=colors[i], alpha=0.3))
@@ -400,11 +400,11 @@ def gerarGraficoPizzaDiario(lista, tarifa=0.65):
     # Adicionar total com consumo e gasto
     total_consumo = sum(consumos)
     total_custo = sum(custos)
-    ax2.text(0.1, 0.15, f'Total Diário: {total_consumo:.2f} kWh',
+    ax2.text(0.65, 0.50, f'Total Diário: {total_consumo:.2f} kWh',
              fontsize=13, fontweight='bold', transform=ax2.transAxes,
              bbox=dict(boxstyle="round,pad=0.5", facecolor='gold', alpha=0.7))
 
-    ax2.text(0.1, 0.05, f'Gasto Diário: R$ {total_custo:.2f}',
+    ax2.text(0.65, 0.43, f'Gasto Diário: R$ {total_custo:.2f}',
              fontsize=13, fontweight='bold', transform=ax2.transAxes,
              bbox=dict(boxstyle="round,pad=0.5", facecolor='lightcoral', alpha=0.7))
     plt.tight_layout()
@@ -491,13 +491,13 @@ def gerarGraficoPizzaMensal(lista):
 
     # Adicionar total
     total = sum(consumos)
-    ax2.text(0.1, 0.15, f'Total Mensal: {total:.1f} kWh',
+    ax2.text(0.65, 0.50, f'Total Mensal: {total:.1f} kWh',
              fontsize=13, fontweight='bold', transform=ax2.transAxes,
              bbox=dict(boxstyle="round,pad=0.5", facecolor='gold', alpha=0.7))
 
     # Adicionar estimativa de custo (considerando R$ 0,65/kWh como exemplo)
     custo_estimado = total * 0.65
-    ax2.text(0.1, 0.05, f'Custo Estimado: R$ {custo_estimado:.2f}',
+    ax2.text(0.65, 0.43, f'Custo Estimado: R$ {custo_estimado:.2f}',
              fontsize=13, fontweight='bold', transform=ax2.transAxes,
              bbox=dict(boxstyle="round,pad=0.5", facecolor='lightcoral', alpha=0.7))
 
